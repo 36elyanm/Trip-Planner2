@@ -192,25 +192,35 @@ nav{position:sticky;top:0;z-index:900;background:rgba(245,245,247,.72);backdrop-
 .ph{text-align:center;margin-bottom:2rem}
 .ph h2{font-size:1.9rem;margin-bottom:.3rem}
 .ph p{color:var(–text2);font-size:.95rem}
-.pgr{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem}
-.pc{background:var(–surface);border:1.5px solid var(–border);border-radius:var(–r);padding:1.8rem;text-align:center;transition:all var(–dur) var(–ease);position:relative}
-.pc:hover{transform:translateY(-3px);box-shadow:var(–shadow-lg)}
-.pc.ft{border-color:var(–accent)}
-.pc.ft::after{content:‘Popular’;position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(–accent);color:#fff;font-size:.68rem;font-weight:700;padding:.22rem .8rem;border-radius:50px;letter-spacing:.04em}
-.pc h3{font-size:1.25rem;margin-bottom:.1rem}
-.pc .st{font-size:.83rem;color:var(–text2);margin-bottom:1.1rem}
-.pc .pr{font-family:var(–sf-mono);font-size:2.5rem;font-weight:700;color:var(–text);letter-spacing:-.04em}
-.pc .pr span{font-size:.88rem;color:var(–text3);font-weight:400}
-.pc .pe{font-size:.8rem;color:var(–text3);margin-bottom:1.2rem}
-.pc ul{list-style:none;text-align:left;margin-bottom:1.4rem}
-.pc li{padding:.35rem 0;font-size:.86rem;color:var(–text2);display:flex;align-items:flex-start;gap:.4rem;line-height:1.4}
-.pc li::before{content:‘✓’;color:var(–green);font-weight:700;font-size:.8rem;margin-top:.1rem}
-.bpl{width:100%;padding:.7rem;border-radius:var(–rs);font-weight:600;font-size:.9rem;transition:all var(–dur) var(–ease)}
-.bpl.f{background:var(–accent);color:#fff}
-.bpl.f:hover{background:var(–accent2)}
-.bpl.g{border:1.5px solid var(–border);color:var(–text)}
-.bpl.g:hover{border-color:var(–accent);color:var(–accent)}
-.al-logo{font-size:2rem;margin-bottom:.6rem}
+.fsb{background:var(–surface);border:1.5px solid var(–border);border-radius:var(–r);padding:2rem;margin-bottom:1.6rem;box-shadow:var(–shadow)}
+.fsb h2{font-size:1.5rem;margin-bottom:.3rem}
+.fsb>p{color:var(–text2);font-size:.9rem;margin-bottom:1.4rem}
+.fsr{display:grid;grid-template-columns:1fr 1fr auto;gap:.8rem;align-items:end}
+.fsr .fd{margin:0}
+.fsr label{display:block;font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(–text2);margin-bottom:.3rem}
+.fsb-btn{padding:.75rem 1.6rem;border-radius:var(–rs);background:var(–accent);color:#fff;font-weight:700;font-size:.9rem;white-space:nowrap;transition:all var(–dur) var(–ease);border:none;cursor:pointer}
+.fsb-btn:hover{background:var(–accent2);transform:translateY(-1px)}
+.fr-wrap{display:flex;flex-direction:column;gap:.7rem}
+.fr-al-hdr{display:flex;align-items:center;gap:.7rem;margin:1rem 0 .4rem;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(–text3)}
+.fr-al-hdr::after{content:'';flex:1;height:1px;background:var(–border)}
+.fr-row{background:var(–surface);border:1.5px solid var(–border);border-radius:var(–rs);padding:.9rem 1.1rem;display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:1rem;transition:all var(–dur) var(–ease)}
+.fr-row:hover{border-color:var(–accent);box-shadow:var(–shadow)}
+.fr-route{font-weight:700;font-size:.97rem;letter-spacing:-.01em}
+.fr-meta{display:flex;gap:.4rem;align-items:center;margin-top:.2rem;flex-wrap:wrap}
+.fr-cls{font-size:.66rem;font-weight:700;padding:.12rem .45rem;border-radius:50px;letter-spacing:.04em;text-transform:uppercase}
+.fr-cls.eco{background:var(–accent-soft);color:var(–accent)}
+.fr-cls.bus{background:rgba(52,199,89,.12);color:var(–green)}
+.fr-cls.fst{background:rgba(175,82,222,.12);color:var(–purple)}
+.fr-dur{font-size:.78rem;color:var(–text3)}
+.fr-stops{font-size:.78rem;color:var(–text2)}
+.fr-code{font-size:.75rem;color:var(–text3)}
+.fr-price{font-family:var(–sf-mono);font-size:1.1rem;font-weight:700;color:var(–text);text-align:right}
+.fr-price-sub{font-size:.7rem;color:var(–text3)}
+.fr-bk{font-size:.78rem;padding:.35rem .85rem;border-radius:var(–rs);font-weight:700;background:var(–accent-soft);color:var(–accent);border:none;cursor:pointer;transition:all var(–dur) var(–ease);white-space:nowrap}
+.fr-bk:hover{background:var(–accent);color:#fff}
+.fr-empty{text-align:center;padding:2.5rem;color:var(–text3);font-size:.92rem}
+.fr-empty span{font-size:2rem;display:block;margin-bottom:.6rem}
+@media(max-width:600px){.fsr{grid-template-columns:1fr 1fr}.fr-row{grid-template-columns:1fr auto}.fr-dur,.fr-bk,.fr-stops{display:none}}
 
 /* ─ modal ─ */
 .mo{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.45);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center}
@@ -408,87 +418,16 @@ footer{text-align:center;padding:2rem;font-size:.82rem;color:var(–text3);borde
 
 <div id="p-pricing" class="pg">
   <div class="ct">
-    <div class="ph"><h2>✈️ Flight Pricing</h2><p>Compare fares across top airlines for your next journey</p></div>
-    <div class="pgr">
-      <div class="pc">
-        <div class="al-logo">🔵</div>
-        <h3>Delta Air Lines</h3><p class="st">Economy · JFK → LHR</p>
-        <div class="pr">$549<span>/seat</span></div><p class="pe">Nonstop · 7h 05m</p>
-        <ul>
-          <li>Main Cabin seat (32" pitch)</li>
-          <li>1 carry-on + personal item</li>
-          <li>Complimentary meals & drinks</li>
-          <li>Seatback entertainment screen</li>
-          <li>Delta Comfort+ upgrade available</li>
-        </ul>
-        <button class="bpl g" onclick="toast('Searching Delta flights...')">View Delta Fares</button>
-      </div>
-      <div class="pc ft">
-        <div class="al-logo">🟡</div>
-        <h3>Emirates</h3><p class="st">Business · DXB → JFK</p>
-        <div class="pr">$3,299<span>/seat</span></div><p class="pe">Nonstop · 13h 55m</p>
-        <ul>
-          <li>Lie-flat private suite (80" bed)</li>
-          <li>2 checked bags (32 kg each)</li>
-          <li>Chauffeur airport transfer</li>
-          <li>Emirates Business Lounge access</li>
-          <li>À la carte fine dining on board</li>
-        </ul>
-        <button class="bpl f" onclick="toast('Searching Emirates flights...')">View Emirates Fares</button>
-      </div>
-      <div class="pc">
-        <div class="al-logo">🟠</div>
-        <h3>Singapore Airlines</h3><p class="st">First Class · SIN → LHR</p>
-        <div class="pr">$8,499<span>/seat</span></div><p class="pe">Nonstop · 13h 50m</p>
-        <ul>
-          <li>Private enclosed First Class Suite</li>
-          <li>Unlimited checked baggage (50 kg)</li>
-          <li>Private SilverKris Lounge access</li>
-          <li>Dom Pérignon & Krug on board</li>
-          <li>Personalized cabin crew attendant</li>
-        </ul>
-        <button class="bpl g" onclick="toast('Searching Singapore Airlines flights...')">View SIA Fares</button>
-      </div>
-      <div class="pc">
-        <div class="al-logo">🔷</div>
-        <h3>United Airlines</h3><p class="st">Economy · EWR → CDG</p>
-        <div class="pr">$479<span>/seat</span></div><p class="pe">Nonstop · 7h 30m</p>
-        <ul>
-          <li>Economy seat (31" pitch)</li>
-          <li>1 carry-on + personal item</li>
-          <li>Complimentary meals on board</li>
-          <li>United Wi-Fi available</li>
-          <li>MileagePlus miles earned</li>
-        </ul>
-        <button class="bpl g" onclick="toast('Searching United flights...')">View United Fares</button>
-      </div>
-      <div class="pc">
-        <div class="al-logo">🟠</div>
-        <h3>easyJet</h3><p class="st">Economy · LGW → BCN</p>
-        <div class="pr">£89<span>/seat</span></div><p class="pe">Nonstop · 2h 15m</p>
-        <ul>
-          <li>Standard seat (29" pitch)</li>
-          <li>1 small cabin bag included</li>
-          <li>Optional seat selection</li>
-          <li>Add hold bag from £13</li>
-          <li>easyJet Plus perks available</li>
-        </ul>
-        <button class="bpl g" onclick="toast('Searching easyJet flights...')">View easyJet Fares</button>
-      </div>
-      <div class="pc">
-        <div class="al-logo">🔴</div>
-        <h3>Air France</h3><p class="st">Business · CDG → NRT</p>
-        <div class="pr">€2,899<span>/seat</span></div><p class="pe">Nonstop · 11h 55m</p>
-        <ul>
-          <li>Fully flat seat (76" bed)</li>
-          <li>2 checked bags (23 kg each)</li>
-          <li>Air France Lounge CDG access</li>
-          <li>Chef-curated French cuisine</li>
-          <li>Flying Blue Miles accrual</li>
-        </ul>
-        <button class="bpl g" onclick="toast('Searching Air France flights...')">View Air France Fares</button>
+    <div class="fsb">
+      <h2>✈️ Search Flight Prices</h2>
+      <p>Enter your departure and arrival airports to compare fares across top airlines</p>
+      <div class="fsr">
+        <div class="fd"><label>From (airport code or city)</label><input id="fsFrom" placeholder="e.g. JFK, LHR, CDG" oninput="this.value=this.value.toUpperCase()"></div>
+        <div class="fd"><label>To (airport code or city)</label><input id="fsTo" placeholder="e.g. LHR, JFK, NRT" oninput="this.value=this.value.toUpperCase()"></div>
+        <button class="fsb-btn" onclick="searchFlights()">Search</button>
       </div>
     </div>
+    <div id="fr-results"></div>
   </div>
 </div>
 
@@ -621,6 +560,107 @@ function genAI(type,btn){
   },1200)
 }
 function addAR(s){evs.push({id:nId++,type:s.type,title:s.title,date:s.date,det:s.det,price:s.price});toast('Added to your trip!')}
+
+// ═══ FLIGHT SEARCH ═══
+const FLIGHTS=[
+  // Delta
+  {al:'Delta Air Lines',icon:'🔵',code:'DL401',fr:'JFK',to:'LHR',cls:'Economy',price:549,dur:'7h 05m',stops:'Nonstop'},
+  {al:'Delta Air Lines',icon:'🔵',code:'DL403',fr:'JFK',to:'CDG',cls:'Economy',price:489,dur:'7h 20m',stops:'Nonstop'},
+  {al:'Delta Air Lines',icon:'🔵',code:'DL406',fr:'ATL',to:'LHR',cls:'Business',price:2199,dur:'8h 55m',stops:'Nonstop'},
+  {al:'Delta Air Lines',icon:'🔵',code:'DL408',fr:'ATL',to:'FCO',cls:'Economy',price:579,dur:'11h 15m',stops:'Nonstop'},
+  {al:'Delta Air Lines',icon:'🔵',code:'DL410',fr:'LAX',to:'LHR',cls:'Business',price:2399,dur:'10h 20m',stops:'Nonstop'},
+  {al:'Delta Air Lines',icon:'🔵',code:'DL412',fr:'MSP',to:'AMS',cls:'Economy',price:519,dur:'8h 45m',stops:'Nonstop'},
+  {al:'Delta Air Lines',icon:'🔵',code:'DL420',fr:'JFK',to:'NRT',cls:'Economy',price:739,dur:'13h 55m',stops:'1 stop'},
+  {al:'Delta Air Lines',icon:'🔵',code:'DL422',fr:'ATL',to:'CDG',cls:'Economy',price:529,dur:'9h 30m',stops:'Nonstop'},
+  {al:'Delta Air Lines',icon:'🔵',code:'DL450',fr:'BOS',to:'LHR',cls:'Economy',price:499,dur:'7h 00m',stops:'Nonstop'},
+  {al:'Delta Air Lines',icon:'🔵',code:'DL460',fr:'JFK',to:'FCO',cls:'Business',price:2599,dur:'9h 25m',stops:'Nonstop'},
+  // Emirates
+  {al:'Emirates',icon:'🟡',code:'EK201',fr:'DXB',to:'JFK',cls:'Business',price:3299,dur:'13h 55m',stops:'Nonstop'},
+  {al:'Emirates',icon:'🟡',code:'EK215',fr:'DXB',to:'LAX',cls:'Economy',price:780,dur:'16h 45m',stops:'Nonstop'},
+  {al:'Emirates',icon:'🟡',code:'EK003',fr:'DXB',to:'LHR',cls:'First',price:8999,dur:'7h 00m',stops:'Nonstop'},
+  {al:'Emirates',icon:'🟡',code:'EK073',fr:'DXB',to:'CDG',cls:'Business',price:2899,dur:'6h 40m',stops:'Nonstop'},
+  {al:'Emirates',icon:'🟡',code:'EK231',fr:'DXB',to:'ORD',cls:'Economy',price:699,dur:'14h 35m',stops:'Nonstop'},
+  {al:'Emirates',icon:'🟡',code:'EK501',fr:'DXB',to:'SYD',cls:'Economy',price:890,dur:'13h 50m',stops:'Nonstop'},
+  {al:'Emirates',icon:'🟡',code:'EK205',fr:'JFK',to:'DXB',cls:'Economy',price:729,dur:'12h 30m',stops:'Nonstop'},
+  {al:'Emirates',icon:'🟡',code:'EK033',fr:'LHR',to:'DXB',cls:'Business',price:2599,dur:'6h 55m',stops:'Nonstop'},
+  {al:'Emirates',icon:'🟡',code:'EK009',fr:'DXB',to:'NRT',cls:'Economy',price:749,dur:'9h 45m',stops:'Nonstop'},
+  {al:'Emirates',icon:'🟡',code:'EK143',fr:'DXB',to:'BKK',cls:'Economy',price:399,dur:'5h 55m',stops:'Nonstop'},
+  // Singapore Airlines
+  {al:'Singapore Airlines',icon:'🟠',code:'SQ317',fr:'SIN',to:'LHR',cls:'First',price:8499,dur:'13h 50m',stops:'Nonstop'},
+  {al:'Singapore Airlines',icon:'🟠',code:'SQ23',fr:'SIN',to:'JFK',cls:'Business',price:4199,dur:'18h 40m',stops:'Nonstop'},
+  {al:'Singapore Airlines',icon:'🟠',code:'SQ37',fr:'SIN',to:'LAX',cls:'Economy',price:899,dur:'17h 35m',stops:'Nonstop'},
+  {al:'Singapore Airlines',icon:'🟠',code:'SQ11',fr:'SIN',to:'NRT',cls:'Economy',price:299,dur:'7h 05m',stops:'Nonstop'},
+  {al:'Singapore Airlines',icon:'🟠',code:'SQ335',fr:'SIN',to:'CDG',cls:'Business',price:3899,dur:'13h 15m',stops:'Nonstop'},
+  {al:'Singapore Airlines',icon:'🟠',code:'SQ211',fr:'SIN',to:'SYD',cls:'Economy',price:349,dur:'8h 05m',stops:'Nonstop'},
+  {al:'Singapore Airlines',icon:'🟠',code:'SQ25',fr:'JFK',to:'SIN',cls:'Business',price:3999,dur:'19h 10m',stops:'Nonstop'},
+  {al:'Singapore Airlines',icon:'🟠',code:'SQ321',fr:'LHR',to:'SIN',cls:'Economy',price:849,dur:'13h 55m',stops:'Nonstop'},
+  {al:'Singapore Airlines',icon:'🟠',code:'SQ801',fr:'SIN',to:'HKG',cls:'Economy',price:189,dur:'3h 45m',stops:'Nonstop'},
+  {al:'Singapore Airlines',icon:'🟠',code:'SQ841',fr:'SIN',to:'BKK',cls:'Economy',price:149,dur:'2h 25m',stops:'Nonstop'},
+  // United
+  {al:'United Airlines',icon:'🔷',code:'UA10',fr:'EWR',to:'CDG',cls:'Economy',price:479,dur:'7h 30m',stops:'Nonstop'},
+  {al:'United Airlines',icon:'🔷',code:'UA900',fr:'ORD',to:'LHR',cls:'Economy',price:519,dur:'8h 30m',stops:'Nonstop'},
+  {al:'United Airlines',icon:'🔷',code:'UA40',fr:'IAH',to:'CDG',cls:'Economy',price:559,dur:'9h 10m',stops:'Nonstop'},
+  {al:'United Airlines',icon:'🔷',code:'UA837',fr:'SFO',to:'NRT',cls:'Business',price:2799,dur:'11h 00m',stops:'Nonstop'},
+  {al:'United Airlines',icon:'🔷',code:'UA62',fr:'EWR',to:'FCO',cls:'Economy',price:499,dur:'9h 05m',stops:'Nonstop'},
+  {al:'United Airlines',icon:'🔷',code:'UA934',fr:'LAX',to:'LHR',cls:'Economy',price:569,dur:'10h 35m',stops:'Nonstop'},
+  {al:'United Airlines',icon:'🔷',code:'UA920',fr:'SFO',to:'LHR',cls:'Business',price:2599,dur:'10h 05m',stops:'Nonstop'},
+  {al:'United Airlines',icon:'🔷',code:'UA57',fr:'EWR',to:'LHR',cls:'Economy',price:509,dur:'7h 10m',stops:'Nonstop'},
+  {al:'United Airlines',icon:'🔷',code:'UA82',fr:'ORD',to:'NRT',cls:'Economy',price:649,dur:'13h 35m',stops:'Nonstop'},
+  {al:'United Airlines',icon:'🔷',code:'UA139',fr:'SFO',to:'SIN',cls:'Business',price:3299,dur:'16h 20m',stops:'Nonstop'},
+  // easyJet
+  {al:'easyJet',icon:'🧡',code:'EZY8481',fr:'LGW',to:'BCN',cls:'Economy',price:97,dur:'2h 15m',stops:'Nonstop'},
+  {al:'easyJet',icon:'🧡',code:'EZY8371',fr:'LGW',to:'AMS',cls:'Economy',price:74,dur:'1h 35m',stops:'Nonstop'},
+  {al:'easyJet',icon:'🧡',code:'EZY8051',fr:'MAN',to:'CDG',cls:'Economy',price:88,dur:'1h 45m',stops:'Nonstop'},
+  {al:'easyJet',icon:'🧡',code:'EZY8161',fr:'LGW',to:'FCO',cls:'Economy',price:119,dur:'2h 35m',stops:'Nonstop'},
+  {al:'easyJet',icon:'🧡',code:'EZY8781',fr:'EDI',to:'MAD',cls:'Economy',price:109,dur:'2h 50m',stops:'Nonstop'},
+  {al:'easyJet',icon:'🧡',code:'EZY8231',fr:'BRS',to:'PRG',cls:'Economy',price:82,dur:'2h 10m',stops:'Nonstop'},
+  {al:'easyJet',icon:'🧡',code:'EZY8971',fr:'LGW',to:'DUB',cls:'Economy',price:65,dur:'1h 25m',stops:'Nonstop'},
+  {al:'easyJet',icon:'🧡',code:'EZY8121',fr:'MAN',to:'AMS',cls:'Economy',price:79,dur:'1h 40m',stops:'Nonstop'},
+  {al:'easyJet',icon:'🧡',code:'EZY8641',fr:'LTN',to:'VCE',cls:'Economy',price:93,dur:'2h 20m',stops:'Nonstop'},
+  {al:'easyJet',icon:'🧡',code:'EZY8201',fr:'LGW',to:'ATH',cls:'Economy',price:129,dur:'3h 35m',stops:'Nonstop'},
+  // Air France
+  {al:'Air France',icon:'🔴',code:'AF275',fr:'CDG',to:'NRT',cls:'Business',price:2899,dur:'11h 55m',stops:'Nonstop'},
+  {al:'Air France',icon:'🔴',code:'AF11',fr:'CDG',to:'JFK',cls:'Economy',price:529,dur:'8h 05m',stops:'Nonstop'},
+  {al:'Air France',icon:'🔴',code:'AF66',fr:'CDG',to:'LAX',cls:'Business',price:2499,dur:'11h 20m',stops:'Nonstop'},
+  {al:'Air France',icon:'🔴',code:'AF257',fr:'CDG',to:'SIN',cls:'Economy',price:699,dur:'12h 45m',stops:'Nonstop'},
+  {al:'Air France',icon:'🔴',code:'AF84',fr:'CDG',to:'ORD',cls:'Economy',price:489,dur:'9h 00m',stops:'Nonstop'},
+  {al:'Air France',icon:'🔴',code:'AF178',fr:'CDG',to:'MEX',cls:'Economy',price:619,dur:'12h 30m',stops:'Nonstop'},
+  {al:'Air France',icon:'🔴',code:'AF444',fr:'JFK',to:'CDG',cls:'Business',price:2299,dur:'7h 10m',stops:'Nonstop'},
+  {al:'Air France',icon:'🔴',code:'AF432',fr:'LHR',to:'CDG',cls:'Economy',price:189,dur:'1h 05m',stops:'Nonstop'},
+  {al:'Air France',icon:'🔴',code:'AF648',fr:'CDG',to:'BKK',cls:'Economy',price:589,dur:'11h 10m',stops:'Nonstop'},
+  {al:'Air France',icon:'🔴',code:'AF564',fr:'CDG',to:'ORD',cls:'Business',price:2199,dur:'9h 00m',stops:'Nonstop'},
+];
+
+function searchFlights(){
+  const raw_fr=document.getElementById('fsFrom').value.trim().toUpperCase();
+  const raw_to=document.getElementById('fsTo').value.trim().toUpperCase();
+  const el=document.getElementById('fr-results');
+  if(!raw_fr&&!raw_to){el.innerHTML='<div class="fr-empty"><span>✈️</span>Enter at least one airport to search</div>';return}
+  const match=(f,q)=>!q||f===q||f.includes(q)||q.includes(f);
+  const res=FLIGHTS.filter(f=>match(f.fr,raw_fr)&&match(f.to,raw_to));
+  if(!res.length){el.innerHTML='<div class="fr-empty"><span>🔍</span>No flights found for that route. Try different airports.</div>';return}
+  const byAl={};
+  res.forEach(f=>{(byAl[f.al]=byAl[f.al]||[]).push(f)});
+  const clsKey=c=>c==='Economy'?'eco':c==='Business'?'bus':'fst';
+  el.innerHTML=Object.entries(byAl).map(([al,flights])=>`
+    <div class="fr-al-hdr">${flights[0].icon} ${al}</div>
+    <div class="fr-wrap">${flights.map(f=>`
+      <div class="fr-row">
+        <div>
+          <div class="fr-route">${f.fr} → ${f.to}</div>
+          <div class="fr-meta">
+            <span class="fr-cls ${clsKey(f.cls)}">${f.cls}</span>
+            <span class="fr-stops">${f.stops}</span>
+            <span class="fr-dur">⏱ ${f.dur}</span>
+            <span class="fr-code">${f.code}</span>
+          </div>
+        </div>
+        <div></div>
+        <div class="fr-price">$${f.price.toLocaleString()}<div class="fr-price-sub">per seat</div></div>
+        <button class="fr-bk" onclick="toast('Booking ${f.code} — ${f.fr} → ${f.to}...')">Book</button>
+      </div>`).join('')}
+    </div>`).join('');
+}
 
 // ═══ UTILS ═══
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
