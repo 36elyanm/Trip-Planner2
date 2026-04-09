@@ -210,6 +210,7 @@ nav{position:sticky;top:0;z-index:900;background:rgba(245,245,247,.72);backdrop-
 .bpl.f:hover{background:var(–accent2)}
 .bpl.g{border:1.5px solid var(–border);color:var(–text)}
 .bpl.g:hover{border-color:var(–accent);color:var(–accent)}
+.al-logo{font-size:2rem;margin-bottom:.6rem}
 
 /* ─ modal ─ */
 .mo{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.45);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center}
@@ -407,43 +408,46 @@ footer{text-align:center;padding:2rem;font-size:.82rem;color:var(–text3);borde
 
 <div id="p-pricing" class="pg">
   <div class="ct">
-    <div class="ph"><h2>✈️ Flight Pricing</h2><p>Compare fare classes and find the right seat for your journey</p></div>
+    <div class="ph"><h2>✈️ Flight Pricing</h2><p>Compare fares across top airlines for your next journey</p></div>
     <div class="pgr">
       <div class="pc">
-        <h3>Economy</h3><p class="st">Smart value for every route</p>
-        <div class="pr">$199<span>/seat</span></div><p class="pe">Avg. transatlantic fare</p>
+        <div class="al-logo">🔵</div>
+        <h3>Delta Air Lines</h3><p class="st">Economy · JFK → LHR</p>
+        <div class="pr">$549<span>/seat</span></div><p class="pe">Nonstop · 7h 05m</p>
         <ul>
-          <li>Standard seat (30–32" pitch)</li>
+          <li>Main Cabin seat (32" pitch)</li>
           <li>1 carry-on + personal item</li>
-          <li>Complimentary snacks & drinks</li>
-          <li>In-flight entertainment</li>
-          <li>USB charging at seat</li>
+          <li>Complimentary meals & drinks</li>
+          <li>Seatback entertainment screen</li>
+          <li>Delta Comfort+ upgrade available</li>
         </ul>
-        <button class="bpl g" onclick="toast('Searching Economy fares...')">Search Economy</button>
+        <button class="bpl g" onclick="toast('Searching Delta flights...')">View Delta Fares</button>
       </div>
       <div class="pc ft">
-        <h3>Business</h3><p class="st">The sweet spot for long-hauls</p>
-        <div class="pr">$1,299<span>/seat</span></div><p class="pe">Avg. transatlantic fare</p>
+        <div class="al-logo">🟡</div>
+        <h3>Emirates</h3><p class="st">Business · DXB → JFK</p>
+        <div class="pr">$3,299<span>/seat</span></div><p class="pe">Nonstop · 13h 55m</p>
         <ul>
-          <li>Lie-flat seat (up to 78")</li>
-          <li>2 checked bags included</li>
-          <li>Priority boarding & check-in</li>
-          <li>Gourmet multi-course dining</li>
-          <li>Lounge access at departure</li>
+          <li>Lie-flat private suite (80" bed)</li>
+          <li>2 checked bags (32 kg each)</li>
+          <li>Chauffeur airport transfer</li>
+          <li>Emirates Business Lounge access</li>
+          <li>À la carte fine dining on board</li>
         </ul>
-        <button class="bpl f" onclick="toast('Searching Business fares...')">Search Business</button>
+        <button class="bpl f" onclick="toast('Searching Emirates flights...')">View Emirates Fares</button>
       </div>
       <div class="pc">
-        <h3>First Class</h3><p class="st">The pinnacle of air travel</p>
-        <div class="pr">$4,999<span>/seat</span></div><p class="pe">Avg. transatlantic fare</p>
+        <div class="al-logo">🟠</div>
+        <h3>Singapore Airlines</h3><p class="st">First Class · SIN → LHR</p>
+        <div class="pr">$8,499<span>/seat</span></div><p class="pe">Nonstop · 13h 50m</p>
         <ul>
-          <li>Private suite with door</li>
-          <li>Unlimited checked baggage</li>
-          <li>Chauffeur transfer included</li>
-          <li>À la carte fine dining</li>
-          <li>Exclusive First Class lounge</li>
+          <li>Private enclosed First Class Suite</li>
+          <li>Unlimited checked baggage (50 kg)</li>
+          <li>Private SilverKris Lounge access</li>
+          <li>Dom Pérignon & Krug on board</li>
+          <li>Personalized cabin crew attendant</li>
         </ul>
-        <button class="bpl g" onclick="toast('Searching First Class fares...')">Search First Class</button>
+        <button class="bpl g" onclick="toast('Searching Singapore Airlines flights...')">View SIA Fares</button>
       </div>
     </div>
   </div>
