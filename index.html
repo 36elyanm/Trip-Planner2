@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wanderly — AI Trip Planner</title>
+<style>
+/* ─── SF PRO via system font stack ─── */
+@font-face{font-family:'SF Pro Display';src:local('SF Pro Display'),local('.SFNSDisplay'),local('SFProDisplay-Regular');font-weight:100 900;font-display:swap}
+@font-face{font-family:'SF Pro Text';src:local('SF Pro Text'),local('.SFNSText'),local('SFProText-Regular');font-weight:100 900;font-display:swap}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+–sf-display:‘SF Pro Display’,-apple-system,BlinkMacSystemFont,‘Segoe UI’,‘Helvetica Neue’,sans-serif;
+–sf-text:‘SF Pro Text’,-apple-system,BlinkMacSystemFont,‘Segoe UI’,‘Helvetica Neue’,sans-serif;
+–sf-mono:‘SF Mono’,ui-monospace,SFMono-Regular,‘Menlo’,‘Consolas’,monospace;
+–bg:#F5F5F7;–bg2:#EBEBED;–bg3:#E0E0E2;
+–surface:#FFFFFF;
+–text:#1D1D1F;–text2:#6E6E73;–text3:#AEAEB2;
+–accent:#0071E3;–accent2:#2997FF;–accent-soft:rgba(0,113,227,.07);
+–green:#34C759;–orange:#FF9500;–red:#FF3B30;–purple:#AF52DE;–teal:#5AC8FA;
+–border:rgba(0,0,0,.06);
+–shadow:0 1px 3px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.06);
+–shadow-lg:0 4px 12px rgba(0,0,0,.08),0 20px 48px rgba(0,0,0,.1);
+–r:16px;–rs:10px;–rx:6px;
+–ease:cubic-bezier(.4,0,.2,1);–dur:.22s;
+}
+[data-theme=“dark”]{
+–bg:#000000;–bg2:#1C1C1E;–bg3:#2C2C2E;
+–surface:#1C1C1E;
+–text:#F5F5F7;–text2:#A1A1A6;–text3:#636366;
+–accent:#2997FF;–accent2:#64B5FF;–accent-soft:rgba(41,151,255,.1);
+–border:rgba(255,255,255,.08);
+–shadow:0 1px 3px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.4);
+–shadow-lg:0 4px 12px rgba(0,0,0,.4),0 20px 48px rgba(0,0,0,.5);
+}
+html{scroll-behavior:smooth}
+body{font-family:var(–sf-text);background:var(–bg);color:var(–text);line-height:1.55;-webkit-font-smoothing:antialiased;transition:background var(–dur) var(–ease),color var(–dur) var(–ease)}
+h1,h2,h3,h4{font-family:var(–sf-display);font-weight:600;letter-spacing:-.02em}
+a{color:var(–accent);text-decoration:none}
+button{font-family:var(–sf-text);cursor:pointer;border:none;background:none;font-size:inherit}
+input,select,textarea{font-family:var(–sf-text);font-size:.94rem;border:1px solid var(–border);background:var(–bg);color:var(–text);border-radius:var(–rs);padding:.7rem 1rem;outline:none;width:100%;transition:border var(–dur) var(–ease),background var(–dur) var(–ease),box-shadow var(–dur) var(–ease)}
+input:focus,select:focus{border-color:var(–accent);box-shadow:0 0 0 3px var(–accent-soft)}
+
+/* ─ theme toggle ─ */
+.tt{position:fixed;top:1rem;right:1rem;z-index:1100;width:42px;height:42px;border-radius:50%;background:var(–surface);border:1px solid var(–border);box-shadow:var(–shadow);display:flex;align-items:center;justify-content:center;font-size:1.15rem;transition:all var(–dur) var(–ease)}
+.tt:hover{transform:scale(1.08);box-shadow:var(–shadow-lg)}
+
+/* ─ nav ─ */
+nav{position:sticky;top:0;z-index:900;background:rgba(245,245,247,.72);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(–border);transition:background var(–dur) var(–ease)}
+[data-theme=“dark”] nav{background:rgba(0,0,0,.72)}
+.ni{max-width:1200px;margin:0 auto;padding:.65rem 2rem;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:var(–sf-display);font-size:1.35rem;font-weight:700;color:var(–text);display:flex;align-items:center;gap:.45rem;letter-spacing:-.03em}
+.li{width:28px;height:28px;background:linear-gradient(135deg,var(–accent),var(–purple));border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.8rem;font-weight:800}
+.nl{display:flex;gap:.3rem;flex-wrap:wrap}
+.nl button{padding:.48rem .95rem;border-radius:50px;color:var(–text2);font-weight:500;font-size:.86rem;transition:all var(–dur) var(–ease)}
+.nl button:hover,.nl button.on{color:var(–accent);background:var(–accent-soft)}
+.nl .ab{background:var(–accent);color:#fff;font-weight:600;padding:.48rem 1.15rem}
+.nl .ab:hover{background:var(–accent2)}
+.nl .ab.in{background:var(–green)}
+
+/* ─ pages ─ */
+.pg{display:none;animation:fu .32s var(–ease)}.pg.on{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.ct{max-width:1200px;margin:0 auto;padding:2rem}
+
+/* ─ auth overlay ─ */
+.ao{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.45);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;animation:fi .25s var(–ease)}
+.ao.h{display:none}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+.ac{background:var(–surface);border-radius:20px;padding:2.5rem;width:min(400px,92vw);box-shadow:var(–shadow-lg);position:relative;animation:ci .3s var(–ease)}
+@keyframes ci{from{opacity:0;transform:scale(.96) translateY(10px)}to{opacity:1;transform:none}}
+.ac h2{font-size:1.65rem;margin-bottom:.2rem}
+.ac>p{color:var(–text2);margin-bottom:1.5rem;font-size:.92rem}
+.fd{margin-bottom:1rem}
+.fd label{display:block;font-size:.76rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(–text2);margin-bottom:.3rem}
+.rm{display:flex;align-items:center;gap:.5rem;margin:.6rem 0 1.3rem}
+.rm input[type=checkbox]{width:18px;height:18px;accent-color:var(–accent)}
+.rm label{font-size:.88rem;color:var(–text2)}
+.bp{width:100%;padding:.82rem;border-radius:var(–rs);background:var(–accent);color:#fff;font-weight:600;font-size:.95rem;transition:all var(–dur) var(–ease)}
+.bp:hover{background:var(–accent2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,113,227,.25)}
+.sw{text-align:center;margin-top:1.2rem;font-size:.88rem;color:var(–text2)}
+.sw a{cursor:pointer;font-weight:600}
+.ax{position:absolute;top:.8rem;right:.8rem;font-size:1.1rem;color:var(–text3);width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:all var(–dur) var(–ease)}
+.ax:hover{background:var(–bg2);color:var(–text)}
+.ae{color:var(–red);font-size:.82rem;margin-bottom:.5rem;display:none}
+
+/* ─ hero ─ */
+.hero{text-align:center;padding:5rem 2rem 3.5rem;position:relative;overflow:hidden}
+.hero::before{content:’’;position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:140%;height:80%;background:radial-gradient(ellipse,var(–accent-soft) 0%,transparent 70%);pointer-events:none}
+.hero>*{position:relative}
+.hero h1{font-size:clamp(2.2rem,5.5vw,3.8rem);line-height:1.08;margin-bottom:1rem;font-weight:700;letter-spacing:-.04em}
+.hero h1 em{background:linear-gradient(135deg,var(–accent),var(–purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
+.hero p{font-size:1.1rem;color:var(–text2);max-width:500px;margin:0 auto 2.2rem;line-height:1.6}
+.hb{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
+.hb .bp{width:auto;padding:.82rem 2rem;border-radius:50px}
+.hb .bs{padding:.82rem 2rem;border-radius:50px;background:var(–surface);color:var(–text);font-weight:600;border:1px solid var(–border);box-shadow:var(–shadow);transition:all var(–dur) var(–ease)}
+.hb .bs:hover{border-color:var(–accent);color:var(–accent)}
+.hc{display:flex;gap:.5rem;justify-content:center;margin-top:2.8rem;flex-wrap:wrap}
+.ch{padding:.4rem .85rem;border-radius:50px;font-size:.78rem;font-weight:600;display:flex;align-items:center;gap:.35rem}
+.ch.fl{background:rgba(0,113,227,.08);color:var(–accent)}
+.ch.ht{background:rgba(175,82,222,.08);color:var(–purple)}
+.ch.fd{background:rgba(52,199,89,.08);color:var(–green)}
+.ch.ai{background:rgba(255,149,0,.08);color:var(–orange)}
+
+/* ─ features grid ─ */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;padding:0 2rem 3rem;max-width:1200px;margin:0 auto}
+.feat{background:var(–surface);border:1px solid var(–border);border-radius:var(–r);padding:1.5rem;box-shadow:var(–shadow);transition:all var(–dur) var(–ease)}
+.feat:hover{transform:translateY(-2px);box-shadow:var(–shadow-lg)}
+.feat .fi{font-size:1.6rem;margin-bottom:.7rem}
+.feat h3{font-size:1.05rem;margin-bottom:.3rem;font-weight:600}
+.feat p{font-size:.86rem;color:var(–text2);line-height:1.5}
+
+/* ─ total banner ─ */
+.tb{background:var(–surface);border:1px solid var(–border);border-radius:var(–r);padding:1.2rem 1.6rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.6rem;box-shadow:var(–shadow)}
+.tl{font-size:.88rem;color:var(–text2);font-weight:500}
+.ta{font-family:var(–sf-mono);font-size:1.7rem;font-weight:700;color:var(–accent);letter-spacing:-.02em}
+
+/* ─ calendar ─ */
+.ch2{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.ch2 h2{font-size:1.45rem}
+.ca{display:flex;gap:.5rem;align-items:center}
+.cnb{width:36px;height:36px;border-radius:var(–rx);border:1px solid var(–border);display:flex;align-items:center;justify-content:center;color:var(–text2);font-size:1rem;transition:all var(–dur) var(–ease);background:var(–surface)}
+.cnb:hover{border-color:var(–accent);color:var(–accent)}
+.bta{padding:.5rem 1.1rem;border-radius:var(–rx);background:var(–accent);color:#fff;font-weight:600;font-size:.84rem;display:flex;align-items:center;gap:.3rem;transition:all var(–dur) var(–ease)}
+.bta:hover{background:var(–accent2)}
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(–border);border-radius:var(–r);overflow:hidden;box-shadow:var(–shadow)}
+.cdn{background:var(–bg2);padding:.5rem;text-align:center;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(–text3)}
+.cc{background:var(–surface);min-height:85px;padding:.4rem;cursor:pointer;transition:background var(–dur) var(–ease);position:relative}
+.cc:hover{background:var(–accent-soft)}
+.cc.td{box-shadow:inset 0 0 0 2px var(–accent)}
+.cc.os{opacity:.3;pointer-events:none}
+.cc .dn{font-size:.82rem;font-weight:600;margin-bottom:.2rem}
+.ce{font-size:.62rem;padding:2px 4px;border-radius:3px;margin-bottom:2px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.ce.flight{background:rgba(0,113,227,.12);color:var(–accent)}
+.ce.hotel{background:rgba(175,82,222,.12);color:var(–purple)}
+.ce.food{background:rgba(52,199,89,.12);color:var(–green)}
+
+/* ─ events list ─ */
+.es{margin-top:1.6rem}
+.es h3{font-size:1.15rem;margin-bottom:.8rem}
+.ec{display:flex;align-items:center;gap:.8rem;padding:.85rem 1rem;background:var(–surface);border:1px solid var(–border);border-radius:var(–rs);margin-bottom:.5rem;transition:all var(–dur) var(–ease)}
+.ec:hover{box-shadow:var(–shadow);transform:translateY(-1px)}
+.ei{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.ei.flight{background:rgba(0,113,227,.08)}
+.ei.hotel{background:rgba(175,82,222,.08)}
+.ei.food{background:rgba(52,199,89,.08)}
+.en{flex:1;min-width:0}
+.en h4{font-size:.9rem;font-weight:600;margin-bottom:.05rem}
+.en p{font-size:.76rem;color:var(–text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ep{font-family:var(–sf-mono);font-weight:600;font-size:.9rem;color:var(–accent);white-space:nowrap}
+.ed{width:30px;height:30px;border-radius:var(–rx);display:flex;align-items:center;justify-content:center;color:var(–text3);transition:all var(–dur) var(–ease);font-size:.8rem;flex-shrink:0}
+.ed:hover{color:var(–red);background:rgba(255,59,48,.08)}
+
+/* ─ map ─ */
+.mw{background:var(–surface);border-radius:var(–r);overflow:hidden;box-shadow:var(–shadow);margin-top:1.6rem;border:1px solid var(–border)}
+.mt{padding:.7rem 1.1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(–border)}
+.mt h3{font-size:.95rem;font-weight:600}
+.mt select{padding:.35rem .65rem;font-size:.82rem;border-radius:var(–rx);width:auto}
+.mf{width:100%;height:340px;border:none}
+
+/* ─ AI generator ─ */
+.ag{background:var(–surface);border-radius:var(–r);padding:1.8rem;box-shadow:var(–shadow);border:1px solid var(–border)}
+.ag h2{font-size:1.5rem;margin-bottom:.3rem}
+.ag>p{color:var(–text2);margin-bottom:1.4rem;font-size:.92rem}
+.at{display:flex;gap:3px;background:var(–bg2);border-radius:var(–rs);padding:3px;margin-bottom:1.4rem}
+.at button{flex:1;padding:.55rem;border-radius:7px;font-weight:600;font-size:.83rem;color:var(–text2);transition:all var(–dur) var(–ease)}
+.at button.on{background:var(–surface);color:var(–accent);box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.af{display:grid;gap:.9rem}
+.ar{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.af label{font-size:.76rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(–text2);margin-bottom:.25rem;display:block}
+.af .fd{display:flex;flex-direction:column}
+.bg{padding:.75rem 1.8rem;border-radius:var(–rs);background:var(–accent);color:#fff;font-weight:600;font-size:.9rem;transition:all var(–dur) var(–ease);display:flex;align-items:center;justify-content:center;gap:.4rem}
+.bg:hover{background:var(–accent2);transform:translateY(-1px)}
+.bg:disabled{opacity:.55;pointer-events:none}
+.sp{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spn .6s linear infinite}
+@keyframes spn{to{transform:rotate(360deg)}}
+.ars{margin-top:1.4rem}
+.arc{border:1px solid var(–border);border-radius:var(–rs);padding:1.1rem;margin-bottom:.6rem;transition:all var(–dur) var(–ease)}
+.arc:hover{border-color:var(–accent);box-shadow:var(–shadow)}
+.arc h4{font-size:.92rem;margin-bottom:.2rem;font-weight:600}
+.arc .ad{font-size:.83rem;color:var(–text2);margin-bottom:.5rem;line-height:1.5}
+.arc .am{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center}
+.arc .am span{font-size:.76rem;color:var(–text3)}
+.arc .ap{font-family:var(–sf-mono);font-size:1rem;color:var(–accent);font-weight:700}
+.bar{margin-top:.5rem;padding:.4rem .9rem;border-radius:var(–rx);background:var(–accent-soft);color:var(–accent);font-weight:600;font-size:.78rem;transition:all var(–dur) var(–ease)}
+.bar:hover{background:var(–accent);color:#fff}
+
+/* ─ pricing ─ */
+.ph{text-align:center;margin-bottom:2rem}
+.ph h2{font-size:1.9rem;margin-bottom:.3rem}
+.ph p{color:var(–text2);font-size:.95rem}
+.pgr{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.2rem}
+.pc{background:var(–surface);border:1.5px solid var(–border);border-radius:var(–r);padding:1.8rem;text-align:center;transition:all var(–dur) var(–ease);position:relative}
+.pc:hover{transform:translateY(-3px);box-shadow:var(–shadow-lg)}
+.pc.ft{border-color:var(–accent)}
+.pc.ft::after{content:‘Popular’;position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(–accent);color:#fff;font-size:.68rem;font-weight:700;padding:.22rem .8rem;border-radius:50px;letter-spacing:.04em}
+.pc h3{font-size:1.25rem;margin-bottom:.1rem}
+.pc .st{font-size:.83rem;color:var(–text2);margin-bottom:1.1rem}
+.pc .pr{font-family:var(–sf-mono);font-size:2.5rem;font-weight:700;color:var(–text);letter-spacing:-.04em}
+.pc .pr span{font-size:.88rem;color:var(–text3);font-weight:400}
+.pc .pe{font-size:.8rem;color:var(–text3);margin-bottom:1.2rem}
+.pc ul{list-style:none;text-align:left;margin-bottom:1.4rem}
+.pc li{padding:.35rem 0;font-size:.86rem;color:var(–text2);display:flex;align-items:flex-start;gap:.4rem;line-height:1.4}
+.pc li::before{content:‘✓’;color:var(–green);font-weight:700;font-size:.8rem;margin-top:.1rem}
+.bpl{width:100%;padding:.7rem;border-radius:var(–rs);font-weight:600;font-size:.9rem;transition:all var(–dur) var(–ease)}
+.bpl.f{background:var(–accent);color:#fff}
+.bpl.f:hover{background:var(–accent2)}
+.bpl.g{border:1.5px solid var(–border);color:var(–text)}
+.bpl.g:hover{border-color:var(–accent);color:var(–accent)}
+
+/* ─ modal ─ */
+.mo{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.45);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center}
+.mo.h{display:none}
+.md{background:var(–surface);border-radius:20px;padding:2rem;width:min(430px,92vw);box-shadow:var(–shadow-lg);animation:ci .3s var(–ease)}
+.md h2{font-size:1.35rem;margin-bottom:1.1rem}
+.mb{display:flex;gap:.6rem;margin-top:1.3rem}
+.mb button{flex:1;padding:.7rem;border-radius:var(–rs);font-weight:600;font-size:.9rem;transition:all var(–dur) var(–ease)}
+.mc{border:1.5px solid var(–border);color:var(–text2)}
+.mc:hover{border-color:var(–accent);color:var(–accent)}
+.ms{background:var(–accent);color:#fff}
+.ms:hover{background:var(–accent2)}
+
+/* ─ toast ─ */
+.to{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(–text);color:var(–bg);padding:.65rem 1.3rem;border-radius:50px;font-size:.86rem;font-weight:500;z-index:3000;transition:transform .3s var(–ease),opacity .3s var(–ease);opacity:0;pointer-events:none}
+.to.s{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ─ footer ─ */
+footer{text-align:center;padding:2rem;font-size:.82rem;color:var(–text3);border-top:1px solid var(–border);margin-top:2rem}
+
+@media(max-width:768px){
+.ct{padding:1.2rem}
+.ni{padding:.5rem 1rem}
+.ar{grid-template-columns:1fr}
+.cc{min-height:52px;padding:.25rem}
+.ce{font-size:.5rem;padding:1px 2px}
+.hero{padding:3rem 1.2rem 2rem}
+.tb{flex-direction:column;gap:.3rem;text-align:center}
+.mf{height:250px}
+.features{padding:0 1.2rem 2rem}
+}
+@media(max-width:520px){
+.nl button:not(.ab){font-size:.78rem;padding:.4rem .55rem}
+.hero h1{font-size:2rem}
+}
+</style>
+
+</head>
+<body>
+
+<div class="to" id="toast"></div>
+<button class="tt" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+
+<!-- ═══ AUTH ═══ -->
+
+<div id="ao" class="ao h">
+  <div class="ac">
+    <button class="ax" onclick="closeAuth()">✕</button>
+    <div id="lv">
+      <h2>Welcome back</h2>
+      <p>Sign in to your trip planner</p>
+      <div class="ae" id="le">Invalid email or password</div>
+      <div class="fd"><label>Email</label><input type="email" id="lE" placeholder="you@example.com"></div>
+      <div class="fd"><label>Password</label><input type="password" id="lP" placeholder="••••••••"></div>
+      <div class="rm"><input type="checkbox" id="rM" checked><label for="rM">Remember me for 30 days</label></div>
+      <button class="bp" onclick="doLogin()">Sign In</button>
+      <p class="sw">New here? <a onclick="showSU()">Create account</a></p>
+    </div>
+    <div id="sv" style="display:none">
+      <h2>Create account</h2>
+      <p>Start planning unforgettable trips</p>
+      <div class="ae" id="se">Please fill all fields (min 8 char password)</div>
+      <div class="fd"><label>Full Name</label><input type="text" id="sN" placeholder="Jane Doe"></div>
+      <div class="fd"><label>Email</label><input type="email" id="sE" placeholder="you@example.com"></div>
+      <div class="fd"><label>Password</label><input type="password" id="sP" placeholder="Min 8 characters"></div>
+      <div class="rm"><input type="checkbox" id="rM2" checked><label for="rM2">Remember me for 30 days</label></div>
+      <button class="bp" onclick="doSignup()">Create Account</button>
+      <p class="sw">Have an account? <a onclick="showLI()">Sign in</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EVENT MODAL ═══ -->
+
+<div id="em" class="mo h">
+  <div class="md">
+    <h2>Add Trip Event</h2>
+    <div class="fd"><label>Type</label><select id="eT"><option value="flight">✈️ Flight</option><option value="hotel">🏨 Hotel</option><option value="food">🍽️ Restaurant</option></select></div>
+    <div class="fd"><label>Title</label><input id="eTi" placeholder="e.g. NYC → Paris"></div>
+    <div class="fd"><label>Date</label><input id="eD" type="date"></div>
+    <div class="fd"><label>Details</label><input id="eDe" placeholder="Gate B22, Terminal 4"></div>
+    <div class="fd"><label>Price ($)</label><input id="ePr" type="number" placeholder="0" min="0"></div>
+    <div class="mb">
+      <button class="mc" onclick="closeMo()">Cancel</button>
+      <button class="ms" onclick="saveEv()">Add Event</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NAV ═══ -->
+
+<nav>
+  <div class="ni">
+    <div class="logo"><div class="li">W</div>Wanderly</div>
+    <div class="nl">
+      <button class="on" onclick="go('home',this)">Home</button>
+      <button onclick="go('planner',this)">Planner</button>
+      <button onclick="go('ai',this)">AI Generate</button>
+      <button onclick="go('pricing',this)">Pricing</button>
+      <button class="ab" onclick="openAuth()" id="aB">Sign In</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════ HOME ═══════════ -->
+
+<div id="p-home" class="pg on">
+  <div class="hero">
+    <h1>Plan every detail.<br><em>Enjoy every moment.</em></h1>
+    <p>AI-powered trip planning with flights, hotels, and restaurants — all on one beautiful calendar with maps.</p>
+    <div class="hb">
+      <button class="bp" onclick="go('planner',document.querySelectorAll('.nl button')[1])">Open Planner</button>
+      <button class="bs" onclick="go('ai',document.querySelectorAll('.nl button')[2])">Try AI Generator</button>
+    </div>
+    <div class="hc">
+      <span class="ch fl">✈️ Flights</span>
+      <span class="ch ht">🏨 Hotels</span>
+      <span class="ch fd">🍽️ Restaurants</span>
+      <span class="ch ai">🤖 AI Powered</span>
+    </div>
+  </div>
+  <div class="features">
+    <div class="feat"><div class="fi">📅</div><h3>Smart Calendar</h3><p>Drag, drop, and organize flights, hotels, and dining across your entire trip timeline.</p></div>
+    <div class="feat"><div class="fi">🤖</div><h3>AI Suggestions</h3><p>Get personalized flight, hotel, and restaurant recommendations with detailed descriptions.</p></div>
+    <div class="feat"><div class="fi">🗺️</div><h3>Interactive Maps</h3><p>View all your trip destinations on Google Maps, Apple Maps, or Waze — your choice.</p></div>
+    <div class="feat"><div class="fi">💰</div><h3>Budget Tracking</h3><p>See your estimated trip total update in real-time as you add events.</p></div>
+  </div>
+</div>
+
+<!-- ═══════════ PLANNER ═══════════ -->
+
+<div id="p-planner" class="pg">
+  <div class="ct">
+    <div class="tb">
+      <span class="tl">Estimated Trip Total</span>
+      <span class="ta" id="tT">$0</span>
+    </div>
+    <div class="ch2">
+      <h2 id="cT"></h2>
+      <div class="ca">
+        <button class="cnb" onclick="cM(-1)">‹</button>
+        <button class="cnb" onclick="cM(1)">›</button>
+        <button class="bta" onclick="openMo()">+ Add Event</button>
+      </div>
+    </div>
+    <div class="cg" id="cG"></div>
+    <div class="es"><h3>📋 All Events</h3><div id="eL"></div></div>
+    <div class="mw">
+      <div class="mt">
+        <h3>🗺️ Trip Map</h3>
+        <select id="mP" onchange="uMap()">
+          <option value="google">Google Maps</option>
+          <option value="apple">Apple Maps</option>
+          <option value="waze">Waze</option>
+        </select>
+      </div>
+      <iframe class="mf" id="mF" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d48389236!2d-3!3d48!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ AI GENERATE ═══════════ -->
+
+<div id="p-ai" class="pg">
+  <div class="ct">
+    <div class="ag">
+      <h2>AI Trip Generator</h2>
+      <p>Get smart suggestions for flights, hotels, and restaurants — powered by AI descriptions and pricing.</p>
+      <div class="at">
+        <button class="on" onclick="sAt('flight',this)">✈️ Flights</button>
+        <button onclick="sAt('hotel',this)">🏨 Hotels</button>
+        <button onclick="sAt('food',this)">🍽️ Restaurants</button>
+      </div>
+      <div id="af-flight" class="af">
+        <div class="ar"><div class="fd"><label>From</label><input id="fF" placeholder="New York"></div><div class="fd"><label>To</label><input id="fT" placeholder="Tokyo"></div></div>
+        <div class="ar"><div class="fd"><label>Date</label><input id="fD" type="date"></div><div class="fd"><label>Class</label><select id="fB"><option>Economy</option><option>Business</option><option>First Class</option></select></div></div>
+        <button class="bg" onclick="genAI('flight',this)">Generate Suggestions</button>
+      </div>
+      <div id="af-hotel" class="af" style="display:none">
+        <div class="ar"><div class="fd"><label>Destination</label><input id="hDe" placeholder="Paris, France"></div><div class="fd"><label>Check-in</label><input id="hDa" type="date"></div></div>
+        <div class="ar"><div class="fd"><label>Nights</label><input id="hN" type="number" value="3" min="1"></div><div class="fd"><label>Style</label><select id="hS"><option>Boutique</option><option>Luxury</option><option>Budget</option><option>Resort</option></select></div></div>
+        <button class="bg" onclick="genAI('hotel',this)">Generate Suggestions</button>
+      </div>
+      <div id="af-food" class="af" style="display:none">
+        <div class="ar"><div class="fd"><label>City</label><input id="rC" placeholder="Rome, Italy"></div><div class="fd"><label>Cuisine</label><select id="rCu"><option>Local</option><option>Italian</option><option>Japanese</option><option>French</option><option>Mexican</option><option>Indian</option><option>American</option></select></div></div>
+        <div class="ar"><div class="fd"><label>Meal</label><select id="rM3"><option>Dinner</option><option>Lunch</option><option>Breakfast</option><option>Brunch</option></select></div><div class="fd"><label>Price Range</label><select id="rPr"><option>$$</option><option>$</option><option>$$$</option><option>$$$$</option></select></div></div>
+        <button class="bg" onclick="genAI('food',this)">Generate Suggestions</button>
+      </div>
+      <div class="ars" id="aR"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ PRICING ═══════════ -->
+
+<div id="p-pricing" class="pg">
+  <div class="ct">
+    <div class="ph"><h2>Simple pricing</h2><p>Choose the plan that fits your travel style</p></div>
+    <div class="pgr">
+      <div class="pc">
+        <h3>Free</h3><p class="st">For casual travelers</p>
+        <div class="pr">$0<span>/mo</span></div><p class="pe">Free forever</p>
+        <ul><li>Up to 3 trips</li><li>Calendar & map view</li><li>5 AI suggestions/month</li><li>Basic event types</li></ul>
+        <button class="bpl g" onclick="toast('You\'re on the Free plan!')">Get Started</button>
+      </div>
+      <div class="pc ft">
+        <h3>Pro</h3><p class="st">For frequent flyers</p>
+        <div class="pr">$9<span>/mo</span></div><p class="pe">Billed annually</p>
+        <ul><li>Unlimited trips</li><li>50 AI suggestions/month</li><li>Multi-city itineraries</li><li>Export to PDF & calendar</li><li>Priority support</li></ul>
+        <button class="bpl f" onclick="toast('Starting free trial...')">Start Free Trial</button>
+      </div>
+      <div class="pc">
+        <h3>Team</h3><p class="st">For travel groups</p>
+        <div class="pr">$19<span>/mo</span></div><p class="pe">Per member, billed annually</p>
+        <ul><li>Everything in Pro</li><li>Unlimited AI suggestions</li><li>Shared trip planning</li><li>Real-time collaboration</li><li>Admin controls</li></ul>
+        <button class="bpl g" onclick="toast('Contact sales at hello@wanderly.app')">Contact Sales</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 Wanderly. Built with ♥ for travelers everywhere.</footer>
+
+<script>
+// ═══ STATE ═══
+let user=null,cY=2026,cMo=5,nId=7;
+let evs=[
+  {id:1,type:'flight',title:'NYC → London',date:'2026-06-05',det:'Delta DL401 · JFK T4',price:680},
+  {id:2,type:'hotel',title:'The Savoy, London',date:'2026-06-05',det:'3 nights · River View Suite',price:1420},
+  {id:3,type:'food',title:'Dinner at Dishoom',date:'2026-06-06',det:'Shoreditch · Indian cuisine',price:85},
+  {id:4,type:'flight',title:'London → Paris',date:'2026-06-08',det:'Eurostar · Business Premier',price:320},
+  {id:5,type:'hotel',title:'Le Marais Boutique',date:'2026-06-08',det:'4 nights · Deluxe Room',price:1100},
+  {id:6,type:'food',title:'Lunch at Le Comptoir',date:'2026-06-09',det:'6th Arr. · French bistro',price:65},
+];
+
+// ═══ THEME ═══
+function toggleTheme(){const d=document.documentElement,k=d.dataset.theme==='dark';d.dataset.theme=k?'light':'dark';document.querySelector('.tt').textContent=k?'🌙':'☀️';localStorage.setItem('wt',k?'light':'dark')}
+(()=>{const s=localStorage.getItem('wt');if(s==='dark'){document.documentElement.dataset.theme='dark';document.querySelector('.tt').textContent='☀️'}})();
+
+// ═══ NAV ═══
+function go(p,b){document.querySelectorAll('.pg').forEach(x=>x.classList.remove('on'));document.getElementById('p-'+p).classList.add('on');document.querySelectorAll('.nl button:not(.ab)').forEach(x=>x.classList.remove('on'));if(b)b.classList.add('on');window.scrollTo({top:0,behavior:'smooth'});if(p==='planner'){rCal();rEv();uTot()}}
+
+// ═══ AUTH ═══
+function openAuth(){if(user){user=null;localStorage.removeItem('wu');document.getElementById('aB').textContent='Sign In';document.getElementById('aB').classList.remove('in');toast('Signed out');return}document.getElementById('ao').classList.remove('h')}
+function closeAuth(){document.getElementById('ao').classList.add('h')}
+function showLI(){document.getElementById('lv').style.display='';document.getElementById('sv').style.display='none'}
+function showSU(){document.getElementById('lv').style.display='none';document.getElementById('sv').style.display=''}
+function doLogin(){const e=document.getElementById('lE').value,p=document.getElementById('lP').value;if(!e||!p){document.getElementById('le').style.display='block';return}document.getElementById('le').style.display='none';user={email:e,name:e.split('@')[0]};if(document.getElementById('rM').checked)localStorage.setItem('wu',JSON.stringify(user));const b=document.getElementById('aB');b.textContent=user.name;b.classList.add('in');closeAuth();toast('Welcome back!')}
+function doSignup(){const n=document.getElementById('sN').value,e=document.getElementById('sE').value,p=document.getElementById('sP').value;if(!n||!e||!p||p.length<8){document.getElementById('se').style.display='block';return}document.getElementById('se').style.display='none';user={email:e,name:n};if(document.getElementById('rM2').checked)localStorage.setItem('wu',JSON.stringify(user));const b=document.getElementById('aB');b.textContent=n;b.classList.add('in');closeAuth();toast('Account created!')}
+(()=>{const s=localStorage.getItem('wu');if(s){user=JSON.parse(s);const b=document.getElementById('aB');b.textContent=user.name;b.classList.add('in')}})();
+
+// ═══ CALENDAR ═══
+const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function cM(d){cMo+=d;if(cMo>11){cMo=0;cY++}if(cMo<0){cMo=11;cY--}rCal()}
+function rCal(){
+  document.getElementById('cT').textContent=MN[cMo]+' '+cY;
+  const g=document.getElementById('cG');g.innerHTML='';
+  DN.forEach(d=>{const e=document.createElement('div');e.className='cdn';e.textContent=d;g.appendChild(e)});
+  const f=new Date(cY,cMo,1),ld=new Date(cY,cMo+1,0).getDate(),sd=f.getDay(),pl=new Date(cY,cMo,0).getDate(),td=new Date;
+  for(let i=sd-1;i>=0;i--){const c=document.createElement('div');c.className='cc os';c.innerHTML='<span class="dn">'+(pl-i)+'</span>';g.appendChild(c)}
+  for(let d=1;d<=ld;d++){
+    const c=document.createElement('div');c.className='cc';
+    if(d===td.getDate()&&cMo===td.getMonth()&&cY===td.getFullYear())c.classList.add('td');
+    const ds=cY+'-'+String(cMo+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const de=evs.filter(e=>e.date===ds);
+    let h='<span class="dn">'+d+'</span>';
+    de.forEach(e=>{h+='<span class="ce '+e.type+'">'+esc(e.title)+'</span>'});
+    c.innerHTML=h;c.onclick=()=>openMo(ds);g.appendChild(c)
+  }
+  const tc=sd+ld,rm=7-(tc%7);
+  if(rm<7)for(let i=1;i<=rm;i++){const c=document.createElement('div');c.className='cc os';c.innerHTML='<span class="dn">'+i+'</span>';g.appendChild(c)}
+}
+
+// ═══ EVENTS ═══
+function rEv(){
+  const l=document.getElementById('eL');
+  if(!evs.length){l.innerHTML='<p style="color:var(--text3);font-size:.88rem;padding:.8rem 0">No events yet — add your first trip event!</p>';return}
+  const s=[...evs].sort((a,b)=>a.date.localeCompare(b.date));
+  l.innerHTML=s.map(e=>`<div class="ec"><div class="ei ${e.type}">${e.type==='flight'?'✈️':e.type==='hotel'?'🏨':'🍽️'}</div><div class="en"><h4>${esc(e.title)}</h4><p>${esc(e.date)} · ${esc(e.det)}</p></div><span class="ep">$${e.price.toLocaleString()}</span><button class="ed" onclick="delEv(${e.id})" title="Remove">✕</button></div>`).join('')
+}
+function delEv(id){evs=evs.filter(e=>e.id!==id);rCal();rEv();uTot();toast('Event removed')}
+function uTot(){document.getElementById('tT').textContent='$'+evs.reduce((s,e)=>s+(+e.price||0),0).toLocaleString()}
+
+// ═══ MODAL ═══
+function openMo(ds){document.getElementById('em').classList.remove('h');if(ds)document.getElementById('eD').value=ds}
+function closeMo(){document.getElementById('em').classList.add('h');['eTi','eDe','ePr'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''})}
+function saveEv(){
+  const t=document.getElementById('eT').value,ti=document.getElementById('eTi').value,d=document.getElementById('eD').value,de=document.getElementById('eDe').value,p=+(document.getElementById('ePr').value)||0;
+  if(!ti||!d){toast('Title and date are required');return}
+  evs.push({id:nId++,type:t,title:ti,date:d,det:de,price:p});
+  closeMo();rCal();rEv();uTot();toast('Event added!')
+}
+
+// ═══ MAP ═══
+function uMap(){
+  const p=document.getElementById('mP').value,f=document.getElementById('mF');
+  if(p==='google')f.src='https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d48389236!2d-3!3d48!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus';
+  else if(p==='apple')f.src='https://embed.maps.apple.com/?ll=48,-3&z=4&t=standard';
+  else f.src='https://embed.waze.com/iframe?zoom=4&lat=48&lon=-3'
+}
+
+// ═══ AI GENERATOR ═══
+let aT='flight';
+function sAt(t,b){aT=t;document.querySelectorAll('.at button').forEach(x=>x.classList.remove('on'));b.classList.add('on');['flight','hotel','food'].forEach(x=>{document.getElementById('af-'+x).style.display=x===t?'':'none'});document.getElementById('aR').innerHTML=''}
+
+const AID={
+  flight:{
+    airlines:['Delta Air Lines','Emirates','Singapore Airlines','Japan Airlines','British Airways','Air France','Lufthansa','Qantas','ANA','United Airlines'],
+    feats:['Wi-Fi','Extra legroom','Entertainment','Lie-flat seats','Lounge access','Priority boarding','Meals included','USB power'],
+    descs:['Direct flight with premium cabin service and complimentary meals. Newer aircraft with personal entertainment screens and noise-canceling headphones provided.','One-stop connection through a major hub with competitive pricing. Solid on-time record and comfortable seating throughout the cabin.','Red-eye departure with quiet cabin policy and turndown service in premium classes. Great for maximizing time at your destination.','Morning departure with stunning views. Full meal service with locally inspired menu and excellent crew hospitality.','Afternoon flight with flexible rebooking options. Award-winning entertainment with 300+ movies, shows, and podcasts.']
+  },
+  hotel:{
+    names:['The Grand','Maison Lumière','Hotel Sakura','Casa Bella','The Strand','Noma House','Azure Palace','Aman Residence','Petit Château','Riad El Sol'],
+    amen:['Rooftop pool','Spa & wellness','Free breakfast','Concierge','Fitness center','On-site dining','Room service','City views'],
+    descs:['Heritage building in the city center, walking distance to major sites. Personalized concierge and curated local experience packages.','Modern boutique with local art throughout. Celebrated rooftop bar with panoramic sunset views and craft cocktails.','Quiet retreat in a charming neighborhood. Each room uniquely decorated with artisan furniture and handpicked textiles.','Luxury property with award-winning spa and Michelin-level dining. Perfect for special occasions and romantic getaways.','Eco-friendly with solar power and farm-to-table breakfast. Beautiful courtyard garden ideal for morning yoga and relaxation.']
+  },
+  food:{
+    names:['Osteria del Porto','The Clove Club','Kaze Sushi','Maison Noir','Casa Oaxaca','Spice Route','The River House','Terroir','Harvest Table','Ember & Oak'],
+    vibes:['Intimate & romantic','Lively & social','Quiet & refined','Trendy & modern','Rustic & authentic','Family-friendly'],
+    descs:['Neighborhood gem with seasonal tasting menus celebrating local ingredients. Reserve ahead, but walk-ins welcome at the bar.','Farm-to-table with ingredients from within 50 miles. The open kitchen adds theater and the bread program is legendary.','Casual atmosphere with bold, inventive dishes. The cocktail program features house-made bitters and seasonal infusions.','Classic recipes perfected over generations. Warm service and traditional decor transport you to another era entirely.','Modern regional cuisine with stunning plating. The wine pairing by the sommelier is worth every penny for the full experience.']
+  }
+};
+
+function genAI(type,btn){
+  btn.disabled=true;btn.innerHTML='<div class="sp"></div> Generating...';
+  const res=document.getElementById('aR');res.innerHTML='';
+  setTimeout(()=>{
+    let sg=[];const rnd=a=>a[Math.floor(Math.random()*a.length)];
+    if(type==='flight'){
+      const fr=document.getElementById('fF').value||'New York',to=document.getElementById('fT').value||'London',dt=document.getElementById('fD').value||'2026-07-15',cl=document.getElementById('fB').value;
+      const bp=cl==='Economy'?450:cl==='Business'?1900:4800;
+      for(let i=0;i<3;i++){const al=rnd(AID.flight.airlines),f1=rnd(AID.flight.feats),f2=rnd(AID.flight.feats),pr=Math.round(bp*(.8+Math.random()*.5)),hr=Math.floor(5+Math.random()*10);
+        sg.push({type:'flight',title:`${fr} → ${to} · ${al}`,date:dt,det:`${cl} · ${hr}h · ${f1} · ${f2}`,desc:rnd(AID.flight.descs),price:pr,dur:`${hr}h`})}
+    }else if(type==='hotel'){
+      const de=document.getElementById('hDe').value||'Paris',dt=document.getElementById('hDa').value||'2026-07-15',ni=+(document.getElementById('hN').value)||3,st=document.getElementById('hS').value;
+      const nb=st==='Budget'?85:st==='Boutique'?190:st==='Luxury'?420:310;
+      for(let i=0;i<3;i++){const nm=rnd(AID.hotel.names),a1=rnd(AID.hotel.amen),a2=rnd(AID.hotel.amen),np=Math.round(nb*(.75+Math.random()*.6)),tp=np*ni,rt=(4+Math.random()*.9).toFixed(1);
+        sg.push({type:'hotel',title:`${nm}, ${de}`,date:dt,det:`${ni} nights · ${st} · ${a1} · ${a2}`,desc:rnd(AID.hotel.descs),price:tp,pn:np,rt})}
+    }else{
+      const ci=document.getElementById('rC').value||'Rome',cu=document.getElementById('rCu').value,ml=document.getElementById('rM3').value,pr=document.getElementById('rPr').value;
+      const mb=pr==='$'?22:pr==='$$'?55:pr==='$$$'?110:220;
+      for(let i=0;i<3;i++){const nm=rnd(AID.food.names),vi=rnd(AID.food.vibes),pp=Math.round(mb*(.7+Math.random()*.7)),rt=(4+Math.random()*.9).toFixed(1);
+        sg.push({type:'food',title:nm,date:'2026-07-15',det:`${ci} · ${cu} · ${ml} · ${vi}`,desc:rnd(AID.food.descs),price:pp,rt,pr})}
+    }
+    res.innerHTML=sg.map((s,i)=>`<div class="arc"><h4>${s.type==='flight'?'✈️':s.type==='hotel'?'🏨':'🍽️'} ${esc(s.title)}</h4><p class="ad">${esc(s.desc)}</p><div class="am"><span class="ap">$${s.price.toLocaleString()}</span>${s.dur?'<span>⏱ '+s.dur+'</span>':''}${s.rt?'<span>★ '+s.rt+'</span>':''}${s.pn?'<span>$'+s.pn+'/night</span>':''}</div><button class="bar" onclick='addAR(${JSON.stringify(s).replace(/'/g,"&#39;")})'>+ Add to Trip</button></div>`).join('');
+    btn.disabled=false;btn.innerHTML='Generate Suggestions'
+  },1200)
+}
+function addAR(s){evs.push({id:nId++,type:s.type,title:s.title,date:s.date,det:s.det,price:s.price});toast('Added to your trip!')}
+
+// ═══ UTILS ═══
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('s');setTimeout(()=>t.classList.remove('s'),2200)}
+
+// Init
+rCal();rEv();uTot();
+</script>
+
+</body>
+</html>
